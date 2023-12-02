@@ -1,34 +1,29 @@
 // Your code here.
 
-      let parent = document.getElementsByClassName("item");
-      function onDragstart(event) {
-        event.dataTransfer.setData("drag", event.target.id);
-      }
-      function onDragOver(event) {
-        event.preventDefault();
-      }
-      function onDrop(event) {
-        const sourceId = event.dataTransfer.getData("drag");
-        const sourceElement = document.getElementById(sourceId);
-        const destElement = event.target;
+     let isDragging = false;
+    let startPositionX = 0;
+    let currentTranslateX = 0;
 
-        const sourceNextElement = sourceElement.nextElementSibling;
-        const destNextElement = destElement.nextElementSibling;
+    const cubeContainer = document.getElementById('cubeContainer');
 
-        parent.insertBefore(destElement, sourceNextElement);
+    cubeContainer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startPositionX = e.clientX - currentTranslateX;
+    });
 
-        // adding sourceElement in front of destNextElement
-        parent.insertBefore(sourceElement, destNextElement);
+    cubeContainer.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const newX = e.clientX - startPositionX;
+        cubeContainer.style.transform = `translateX(${newX}px)`;
+        currentTranslateX = newX;
       }
-      for (let x of parent) {
-        x.setAttribute("draggable", true);
-        x.addEventListener("dragstart", onDragstart);
-        x.addEventListener("dragover", onDragOver);
-        x.addEventListener("drop", onDrop);
-      }
-      for (let i = 0; i < parent; i++) {
-        console.log(parent[i]);
-        parent[i].addEventListener("dragstart", onDragstart);
-        parent[i].addEventListener("dragover", onDragOver);
-        parent[i].addEventListener("drop", onDrop);
-      }
+    });
+
+    cubeContainer.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    cubeContainer.addEventListener('mouseleave', () => {
+      isDragging = false;
+    });
+     
